@@ -1,0 +1,9 @@
+.idea/
+#ignore local and sdfs folders after testing
+*.zip
+local/
+sdfs/
+.DS_Store
+*.log
+service
+test*
