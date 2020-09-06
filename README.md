@@ -1,6 +1,6 @@
 ## Structure of this project
 ```
-425MP4
+DistributedSystem
 │
 │   README.md               // specification
 |   genhelpers.go           // general helper functions
@@ -68,7 +68,7 @@ get <sdfs_dest_filename> <local_file_name>
 The Map and Reduce masters have been set to the same node as the master in SDFS. When a user submits a job from master node, the dispatcher will first run a sanity check and then handed the job to the job scheduler of Map or Reduce. When the job is submitted from non-master node, the dispatcher will send the job information to master and then the master can handle the job to job scheduler.
 ### II. Map/Reduce job scheduler:
 The job scheduler of Map/Reduce only runs on the master node. When the Map/Reduce scheduler receives a new job, the scheduler will append the job information to a list that stores all the queueing jobs. There will be a flag indicating whether a task is currently running. When there is no task running (the flag will be set to false) and the size of queue is not zero, the scheduler will dequeue the first job and handle the job to task scheduler. 
-### III. Map/ Reduce task scheduler:
+### III. Map/Reduce task scheduler:
 The task scheduler of Map/Reduce only runs on the master node. When the task scheduler receives a new job, it will partition the job to multiple tasks each with a unique task ID according to the user’s demand. 
 For Map, the task scheduler will first find all files with the given <sdfs_src_directory> prefix in the SDFS. For Reduce, the task scheduler will first find all files with the given <sdfs_interme-diate_filename_prefix> in the SDFS. 
 Then the scheduler will partition those files to different tasks and store the information in a map that maps task ID to files the task needs to deal with. The scheduler will maintain a queue for all unassigned task ID. After that, the scheduler will dequeue unassigned tasks and assigns them to different workers (number of tasks can be larger than number of workers). Then, the master will send tasks (including filename partitioned to the task and the file name of the executable) to the corresponding worker. When the worker receives the task info, it will first fetch all the files it needed from SDFS and start working. 
