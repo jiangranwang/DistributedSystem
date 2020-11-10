@@ -1,3 +1,12 @@
+# Overview
+This repository implements a simplified map reduce system that is similar to Hadoop. 
+
+Every server maintains a membership table that keep tracks of the current running servers in the system. Every server randomly picks three other targets in the system and constantly checks to see if any of the three servers is failed. Each server will send heartbeat pings to the servers that are monitoring it so that the current server indicates it is still alive. When a node fails, at least one of the servers will detect the failure within a prespecified time bound and this failure message is propagted to all other servers in the system in O(log(N)) time where N is the number of servers in the system.
+
+It has a simplified version of Hadoop Distributed File System (HDFS) that can upload files, retrieve files, and delete files from the servers. When running on multiple servers, every file uploaded to any of the server will be replicated three times on other servers to avoid lost files due to server failures. When retrieving files, it first checks if the current server has the file requested. If not, the current server will randomly pick another server that has the file requested and return the file back to the user. On each server, there are two directories local/ and sdfs/, where local/ contains the files stored locally and sdfs/ contains the file stored on the distributed system.
+
+We also implemented a simplified map-reduce system, and we name it to maple-juice system. The maple function can be initiated through the command line interface, and this function performs the same task as the map function in the Hadoop system. Similarly, the juice function does the same thing as the reduce functino in the Hadoop system. To perform a map reduce task, the respective map and reduce functions has to be stored in the exe_src folder and the files that are used in the task should be stored in the distributed file system. Once a maple or a juice command is initiated on a server (call it master), the system will evenly dispatch the jobs to all the servers avaible in the system, and the result will be send to back to the master at the end. Detailed implementation is described in the Design section below.
+
 ## Structure of this project
 ```
 DistributedSystem
